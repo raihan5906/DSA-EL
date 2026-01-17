@@ -1,0 +1,20 @@
+algorithms
+array
+binary search
+binary tree
+bubble sort
+backtracking
+bfs
+dfs
+dijkstra
+dynamic programming
+graph
+hash table
+heap
+linked list
+merge sort
+queue
+recursion
+stack
+trie
+tree traversal
