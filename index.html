@@ -2,21 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Engine</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Search Engine</h1>
-        <div class="search-box">
-            <div class="input-wrapper">
-                <span>🔍</span>
+    <div class="main-wrapper">
+        <h1 class="logo-text">Search Engine</h1>
+        
+        <div class="search-container">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
                 <input id="q" placeholder="Search..." oninput="getSuggestions()" onkeypress="if(event.key==='Enter') search()" autocomplete="off"/>
+                <button onclick="search()">Ask</button>
                 <div id="suggestions"></div>
             </div>
-            <button onclick="search()">Ask</button>
         </div>
-        <div id="result"></div>
+
+        <div id="result-container">
+            <div id="result"></div>
+        </div>
     </div>
     <script src="app.js"></script>
 </body>
