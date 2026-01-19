@@ -1,134 +1,93 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --bg-page: #f0f7ff; 
+    --sidebar-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+    --card-bg: #ffffff;
+    --border-color: #e5e7eb;
+}
 
 body { 
-    font-family: 'Plus Jakarta Sans', sans-serif; 
-    background-color: #e9eff1; /* Soft blue-grey background */
-    margin: 0; 
-    padding: 0;
-    display: flex; 
-    justify-content: center;
+    font-family: 'Inter', sans-serif; 
+    margin: 0; padding: 0;
+    display: flex; justify-content: center;
     min-height: 100vh;
+    background-color: var(--bg-page);
+    color: var(--text-main);
 }
 
 .main-wrapper {
-    width: 100%;
-    max-width: 800px;
-    padding: 60px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: flex; justify-content: center;
+    width: 100%; padding: 60px 20px;
+    position: relative; box-sizing: border-box;
 }
 
-.logo-text {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #1a202c;
-    margin-bottom: 40px;
+/* --- Sectioned Sidebar --- */
+.sidebar {
+    position: fixed; left: 30px; top: 100px;
+    width: 260px; background: var(--sidebar-bg);
+    border-radius: 12px; border: 1px solid var(--border-color);
+    padding: 20px 0; /* Vertical padding only to allow full-width sections */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-/* Centered Search Bar UI */
-.search-container {
-    width: 100%;
-    max-width: 650px;
-    position: relative;
-    margin-bottom: 30px;
+.sidebar h3 { 
+    font-size: 0.75rem; text-transform: uppercase; 
+    letter-spacing: 0.05em; color: var(--text-muted);
+    margin: 0 20px 15px 20px; padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
 }
 
-.search-box { 
-    display: flex; 
-    align-items: center;
-    background: #ffffff; 
-    border-radius: 20px; /* Rounded corners as seen in UI */
-    padding: 8px 10px 8px 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-    border: 1px solid rgba(0,0,0,0.05);
-}
+#recent-list { list-style: none; padding: 0; margin: 0; }
 
-.search-icon {
-    font-size: 18px;
-    margin-right: 10px;
-    opacity: 0.6;
-}
-
-input { 
-    flex: 1; 
-    border: none; 
-    outline: none; 
-    padding: 12px 5px;
-    font-size: 16px; 
-    background: transparent;
-    color: #333;
-}
-
-button { 
-    background: #3182ce; 
-    color: white; 
-    border: none;
-    padding: 10px 25px; 
-    border-radius: 12px;
+/* Sections in recent searches */
+#recent-list li { 
+    padding: 12px 20px;
     cursor: pointer; 
-    font-weight: 600; 
-    transition: all 0.2s;
+    transition: all 0.2s; 
+    font-size: 0.9rem;
+    color: var(--text-main);
+    border-bottom: 1px solid var(--border-color); /* Creates the sectioned look */
 }
 
-button:hover {
-    background: #2b6cb0;
-    transform: translateY(-1px);
+#recent-list li:last-child { border-bottom: none; }
+
+#recent-list li:hover { 
+    background: #f9fafb;
+    color: var(--primary);
+    padding-left: 25px; /* Subtle movement effect on hover */
 }
 
-/* Result Frame */
-#result-container {
-    width: 100%;
-    max-width: 700px;
-    margin-top: 20px;
+/* --- Main Content & Search --- */
+.content-area { flex: 1; max-width: 850px; display: flex; flex-direction: column; align-items: center; }
+.logo-text { font-size: 2.5rem; font-weight: 800; color: #111827; margin-bottom: 40px; }
+
+.search-container { width: 100%; max-width: 720px; position: relative; }
+.search-box { 
+    display: flex; align-items: center; background: white; 
+    border-radius: 15px; padding: 6px 8px 6px 20px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
-.result-card { 
-    background: white; 
-    padding: 40px; 
-    border-radius: 24px; 
-    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-    line-height: 1.6;
-    color: #2d3748;
-}
+input { flex: 1; border: none; outline: none; padding: 12px 5px; font-size: 1.1rem; }
+button { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; min-width: 100px; display: flex; justify-content: center; }
 
-.result-card h2 {
-    margin-top: 0;
-    color: #1a202c;
-    font-size: 1.5rem;
-}
+#spinner { width: 20px; height: 20px; border: 3px solid rgba(255, 255, 255, 0.3); border-top: 3px solid white; border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.hidden { display: none !important; }
 
-/* AI Content Styling */
-.ai-content {
-    font-size: 16px;
-}
+/* --- Results --- */
+#result-container { width: 100%; margin-top: 50px; }
+.result-card { background: var(--card-bg); padding: 40px 50px; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+.ai-content { line-height: 1.8; font-size: 1.1rem; color: #374151; }
 
-.section-head { 
-    color: #2b6cb0; 
-    font-size: 1.2rem; 
-    margin: 25px 0 10px 0; 
-    font-weight: 700;
-}
-
-.section-divider { 
-    border: 0; 
-    height: 1px; 
-    background: #edf2f7; 
-    margin: 20px 0; 
-}
-
-/* Suggestions Dropdown */
-#suggestions {
-    position: absolute; 
-    top: calc(100% + 8px); 
-    left: 0; 
-    right: 0;
-    background: white; 
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    z-index: 1000; 
-    overflow: hidden;
-}
-
-.s-item { padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #f7fafc; }
-.s-item:hover { background: #f0f7ff; color: #3182ce; }
+/* Code Blocks */
+.ai-content pre { background: #111827; color: #f3f4f6; padding: 24px; border-radius: 12px; font-size: 0.95rem; margin: 24px 0; overflow-x: auto; }
+.ai-content code { font-family: 'Inter', monospace; background: #fee2e2; color: #dc2626; padding: 3px 6px; border-radius: 4px; font-size: 0.9em; }
+.ai-content pre code { background: transparent; color: inherit; padding: 0; }

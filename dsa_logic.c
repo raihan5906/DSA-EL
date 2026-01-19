@@ -1,21 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 
-#define ALPHABET_SIZE 27 // a-z + space
+#define ALPHABET_SIZE 27
 
 struct TrieNode {
     struct TrieNode *children[ALPHABET_SIZE];
     int isEndOfWord;
-    int weight; // Tracks popularity
-};
-
-struct Suggestion {
-    char word[100];
     int weight;
 };
 
+// Function to get index for a-z and space
 int getIdx(char c) {
     if (c == ' ') return 26;
     if (c >= 'a' && c <= 'z') return c - 'a';
@@ -31,6 +26,17 @@ struct TrieNode *getNode(void) {
     return pNode;
 }
 
+// Function to check if a word already exists in the Trie
+int exists(struct TrieNode *root, const char *key) {
+    struct TrieNode *pCrawl = root;
+    for (int i = 0; i < strlen(key); i++) {
+        int index = getIdx(key[i]);
+        if (index == -1 || !pCrawl->children[index]) return 0;
+        pCrawl = pCrawl->children[index];
+    }
+    return (pCrawl != NULL && pCrawl->isEndOfWord);
+}
+
 void insert(struct TrieNode *root, const char *key, int w) {
     struct TrieNode *pCrawl = root;
     for (int i = 0; i < strlen(key); i++) {
@@ -40,12 +46,12 @@ void insert(struct TrieNode *root, const char *key, int w) {
         pCrawl = pCrawl->children[index];
     }
     pCrawl->isEndOfWord = 1;
-    pCrawl->weight += w; // Accumulate weight for popularity
+    pCrawl->weight += w;
 }
 
-// Collect matches for sorting
+// Standard suggestion logic variables
 int count = 0;
-struct Suggestion list[50];
+struct Suggestion { char word[100]; int weight; } list[50];
 
 void collect(struct TrieNode* root, char* prefix) {
     if (root->isEndOfWord && count < 50) {
@@ -72,14 +78,7 @@ int main(int argc, char *argv[]) {
     if (argc < 2) return 0;
     struct TrieNode *root = getNode();
 
-    // Mode: "learn" or "suggest"
-    if (strcmp(argv[1], "--learn") == 0 && argc == 3) {
-        FILE *f = fopen("history.txt", "a");
-        if (f) { fprintf(f, "%s\n", argv[2]); fclose(f); }
-        return 0;
-    }
-
-    // Load History
+    // 1. Load History into Trie first (required to check for duplicates)
     FILE *f = fopen("history.txt", "r");
     char line[100];
     if (f) {
@@ -90,7 +89,19 @@ int main(int argc, char *argv[]) {
         fclose(f);
     }
 
-    // Find Prefix
+    // 2. Mode: "learn" - Check for redundancy using the Trie
+    if (strcmp(argv[1], "--learn") == 0 && argc == 3) {
+        if (!exists(root, argv[2])) { // <-- ONLY write if it doesn't exist
+            FILE *f_app = fopen("history.txt", "a");
+            if (f_app) {
+                fprintf(f_app, "%s\n", argv[2]);
+                fclose(f_app);
+            }
+        }
+        return 0;
+    }
+
+    // 3. Mode: "suggest" - Standard lookup
     struct TrieNode* pCrawl = root;
     for (int i = 0; i < strlen(argv[1]); i++) {
         int index = getIdx(argv[1][i]);
@@ -100,8 +111,10 @@ int main(int argc, char *argv[]) {
 
     char buffer[100]; strcpy(buffer, argv[1]);
     collect(pCrawl, buffer);
-    qsort(list, count, sizeof(struct Suggestion), compare); // Sort by weight
+    qsort(list, count, sizeof(struct Suggestion), compare);
 
-    for (int i = 0; i < (count < 5 ? count : 5); i++) printf("%s,", list[i].word);
+    for (int i = 0; i < (count < 5 ? count : 5); i++) {
+        printf("%s%s", list[i].word, (i == (count < 5 ? count : 5) - 1) ? "" : ",");
+    }
     return 0;
 }
