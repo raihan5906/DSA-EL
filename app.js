@@ -7,12 +7,32 @@ window.onload = function() {
             recentSearches = data;
             renderSidebar();
         });
+
+    // DELEGATED COPY LOGIC: This ensures buttons work even after new results load
+    document.addEventListener('click', function(e) {
+        if (e.target && (e.target.classList.contains('copy-code-btn') || e.target.closest('.copy-code-btn'))) {
+            const btn = e.target.classList.contains('copy-code-btn') ? e.target : e.target.closest('.copy-code-btn');
+            const wrapper = btn.closest('.code-wrapper');
+            const codeEl = wrapper.querySelector('code') || wrapper.querySelector('pre');
+            
+            const textToCopy = codeEl.innerText.trim();
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> Copied';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => console.error('Clipbord Error:', err));
+        }
+    });
 };
 
 function renderSidebar() {
     const listEl = document.getElementById('recent-list');
     if (!listEl) return;
-    // The sidebar now populates with items that will be styled as sections in CSS
     listEl.innerHTML = recentSearches.map(q => 
         `<li onclick="document.getElementById('q').value='${q}'; search();">${q}</li>`
     ).join('');
@@ -34,26 +54,40 @@ function search() {
 
     if(!q) return;
 
+    // --- LOADING STATE ---
     btnText.style.display = 'none';
     spinner.classList.remove('hidden');
     askBtn.disabled = true;
-    resDiv.innerHTML = "<div class='result-card'>Searching...</div>";
+    resDiv.innerHTML = "<div class='result-card'><div class='ai-content'>Searching...</div></div>";
 
     fetch(`/search?q=${encodeURIComponent(q)}`)
         .then(res => res.json())
         .then(data => {
+            // --- RESET STATE ---
             btnText.style.display = 'inline';
             spinner.classList.add('hidden');
             askBtn.disabled = false;
 
             updateSidebar(data.query);
 
-            const htmlContent = marked.parse(data.answer);
-            // FIXED: Removed <h2>${data.query}</h2> so the query is no longer printed in the result
-            resDiv.innerHTML = `
-                <div class="result-card">
-                    <div class="ai-content">${htmlContent}</div>
-                </div>`;
+            let htmlContent = marked.parse(data.answer);
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = htmlContent;
+
+            // Wrap code blocks and inject buttons
+            tempDiv.querySelectorAll('pre').forEach(pre => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'code-wrapper';
+                pre.parentNode.insertBefore(wrapper, pre);
+                wrapper.appendChild(pre);
+                
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'copy-code-btn';
+                copyBtn.innerHTML = '<i class="far fa-copy"></i> Copy';
+                wrapper.appendChild(copyBtn);
+            });
+
+            resDiv.innerHTML = `<div class="result-card"><div class="ai-content">${tempDiv.innerHTML}</div></div>`;
         })
         .catch(() => {
             btnText.style.display = 'inline';
@@ -67,13 +101,10 @@ function getSuggestions() {
     const query = document.getElementById('q').value;
     const suggestDiv = document.getElementById('suggestions');
     if (query.length < 2) { suggestDiv.innerHTML = ''; return; }
-
     fetch(`/suggest?q=${encodeURIComponent(query)}`)
         .then(res => res.json())
         .then(list => {
-            suggestDiv.innerHTML = list.map(item => 
-                `<div class="s-item" onclick="selectSuggest('${item}')">${item}</div>`
-            ).join('');
+            suggestDiv.innerHTML = list.map(item => `<div class="s-item" onclick="selectSuggest('${item}')">${item}</div>`).join('');
         });
 }
 

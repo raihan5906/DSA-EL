@@ -5,34 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Engine</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
-    <div class="main-wrapper">
-        <aside class="sidebar">
-            <h3>Recent Searches</h3>
-            <div class="sidebar-divider"></div>
-            <ul id="recent-list">
-                </ul>
-        </aside>
+    <aside class="sidebar">
+        <h3>Recent Searches</h3>
+        <ul id="recent-list"></ul>
+    </aside>
 
+    <div class="main-wrapper">
         <section class="content-area">
             <h1 class="logo-text">Search Engine</h1>
             
             <div class="search-container">
                 <div class="search-box">
                     <span class="search-icon">🔍</span>
-                    <input id="q" 
-                           placeholder="Search..." 
-                           oninput="getSuggestions()" 
-                           onkeypress="if(event.key==='Enter') search()" 
-                           autocomplete="off"/>
-                    
+                    <input id="q" placeholder="Search..." oninput="getSuggestions()" onkeypress="if(event.key==='Enter') search()" autocomplete="off"/>
                     <button id="ask-btn" onclick="search()">
                         <span id="btn-text">Ask</span>
                         <div id="spinner" class="hidden"></div>
                     </button>
-                    
                     <div id="suggestions"></div>
                 </div>
             </div>
@@ -42,7 +35,6 @@
             </div>
         </section>
     </div>
-
     <script src="app.js"></script>
 </body>
 </html>
