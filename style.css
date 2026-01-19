@@ -11,7 +11,6 @@
     --border-color: #e2e8f0;
 }
 
-/* --- Global Reset & Typography Consistency --- */
 body { 
     font-family: 'Inter', sans-serif; 
     margin: 0; 
@@ -20,11 +19,9 @@ body {
     color: var(--text-main);
     display: flex;
     min-height: 100vh;
-    line-height: 1.6; /* Sets global consistent line height */
 }
 
-/* --- Full-Height Fixed Sidebar --- */
-/* --- Full-Height Fixed Sidebar --- */
+/* --- Sidebar: Full Height & Fixed --- */
 .sidebar {
     width: 280px;
     background: var(--sidebar-bg);
@@ -38,42 +35,19 @@ body {
     z-index: 100;
 }
 
-/* Sidebar Heading: Bold and Black */
+/* Sidebar Heading - Bold Black */
 .sidebar h3 { 
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #000000; /* Pure Black */
-    font-weight: 700; /* Bold */
+    color: #000000; 
+    font-weight: 700; 
     padding: 24px 20px 12px 20px;
     margin: 0;
     border-bottom: 1px solid var(--border-color);
 }
 
-/* --- Search UI: Gap after Icon --- */
-.search-icon {
-    font-size: 1.1rem;
-    color: var(--text-muted);
-    margin-right: 12px; /* Gap between icon and text */
-    flex-shrink: 0;
-}
-
-input { 
-    flex: 1; 
-    border: none; 
-    outline: none; 
-    padding: 12px 0; 
-    font-size: 1.1rem; 
-    background: transparent;
-    color: var(--text-main);
-}
-
-#recent-list { 
-    list-style: none; 
-    padding: 0; 
-    margin: 0; 
-    overflow-y: auto;
-}
+#recent-list { list-style: none; padding: 0; margin: 0; overflow-y: auto; }
 
 #recent-list li { 
     padding: 14px 20px;
@@ -87,27 +61,19 @@ input {
     text-overflow: ellipsis;
 }
 
-#recent-list li:hover { 
-    background: #f1f5f9;
-    color: var(--primary);
-}
+#recent-list li:hover { background: #f1f5f9; color: var(--primary); }
 
-/* --- Main Content Area --- */
+/* --- Main Layout --- */
 .main-wrapper {
     flex: 1;
-    margin-left: 280px; /* Aligns content to the right of the fixed sidebar */
+    margin-left: 280px; 
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 60px 20px;
 }
 
-.content-area {
-    width: 100%;
-    max-width: 850px;
-    display: flex;
-    flex-direction: column;
-}
+.content-area { width: 100%; max-width: 850px; display: flex; flex-direction: column; }
 
 .logo-text { 
     font-size: 2.5rem; 
@@ -115,120 +81,55 @@ input {
     color: #0f172a; 
     margin-bottom: 40px; 
     align-self: center;
-    letter-spacing: -0.02em;
 }
 
-/* --- Search UI --- */
+/* --- Search UI: Gap after Icon --- */
 .search-container { width: 100%; margin-bottom: 40px; }
-/* --- Search Box UI Improvements --- */
+
 .search-box { 
     display: flex; 
     align-items: center; 
     background: white; 
     border-radius: 12px; 
-    padding: 8px 10px 8px 18px; /* Slightly reduced right padding for balance */
+    padding: 8px 10px 8px 20px; 
     border: 1px solid var(--border-color); 
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); 
 }
 
+.search-icon {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-right: 12px; /* Professional gap */
+    flex-shrink: 0;
+}
+
+input { 
+    flex: 1; border: none; outline: none; padding: 12px 0; 
+    font-size: 1.1rem; background: transparent; 
+}
+
 button { background: var(--primary); color: white; border: none; padding: 12px 28px; border-radius: 8px; cursor: pointer; font-weight: 600; }
 
-/* --- AI Response Typography Normalization --- */
-.result-card { 
-    background: var(--card-bg); 
-    padding: 40px; 
-    border-radius: 16px; 
-    border: 1px solid var(--border-color);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-}
+/* --- Result Card & AI Content --- */
+.result-card { background: var(--card-bg); padding: 40px; border-radius: 16px; border: 1px solid var(--border-color); margin-top: 20px; }
 
-.ai-content {
-    font-size: 1.05rem; /* Unified base size */
-    color: #334155;
-    line-height: 1.8; /* Consistent spacing for long reads */
-}
+.ai-content { font-size: 1.05rem; line-height: 1.8; color: #334155; }
 
-.ai-content h1, .ai-content h2, .ai-content h3 {
-    color: #0f172a;
-    margin-top: 1.5em;
-    margin-bottom: 0.5em;
-    font-weight: 700;
-}
-
-.ai-content h1 { font-size: 1.75rem; }
-.ai-content h2 { font-size: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
-.ai-content h3 { font-size: 1.25rem; }
-
-.ai-content p, .ai-content li {
-    font-size: 1.05rem;
-    margin-bottom: 1rem;
-}
-
-.ai-content ul, .ai-content ol {
-    padding-left: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-/* --- Code Block & Copy Button --- */
-
-.ai-content pre { 
-    background: #1e293b; 
-    color: #f8fafc; 
-    padding: 24px; 
-    border-radius: 12px; 
-    font-size: 0.95rem; 
-    overflow-x: auto; 
-    margin: 0;
-    line-height: 1.5;
-}
-/* Add/Update these specific blocks in your style.css */
-
-#spinner {
-    width: 20px;
-    height: 20px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-top: 3px solid #ffffff;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    display: inline-block;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.hidden { display: none !important; }
-
-/* Code Wrapper */
+/* Code Block & Copy Button */
 .code-wrapper { position: relative; margin: 2rem 0; }
+.ai-content pre { background: #1e293b; color: #f8fafc; padding: 24px; border-radius: 12px; font-size: 0.95rem; overflow-x: auto; margin: 0; }
 
 .copy-code-btn { 
-    position: absolute; 
-    top: 12px; right: 12px; 
+    position: absolute; top: 12px; right: 12px; 
     background: rgba(255, 255, 255, 0.1); 
     border: 1px solid rgba(255, 255, 255, 0.2); 
-    color: #f1f5f9; 
-    padding: 6px 12px; 
-    border-radius: 6px; 
-    cursor: pointer; 
-    font-size: 0.8rem; 
-    transition: 0.2s;
-    z-index: 10;
+    color: #f1f5f9; padding: 6px 12px; border-radius: 6px; 
+    cursor: pointer; font-size: 0.8rem; z-index: 10;
 }
 
-.copy-code-btn:hover { background: rgba(255, 255, 255, 0.2); }
+.copy-code-btn.copied { background: #10b981 !important; border-color: #10b981 !important; }
 
-.copy-code-btn.copied { 
-    background: #10b981 !important; 
-    border-color: #10b981 !important; 
-    color: white !important; 
-}
-.ai-content code {
-    font-family: 'JetBrains Mono', monospace; /* Professional font for code snippets */
-    background: #f1f5f9;
-    color: #e11d48;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 0.9em;
-}
-
-.ai-content pre code { background: transparent; color: inherit; padding: 0; font-size: 0.95rem; }
-
+/* Spinner */
+#spinner { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid white; border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.hidden { display: none !important; }
