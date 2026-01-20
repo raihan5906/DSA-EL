@@ -8,13 +8,11 @@ window.onload = function() {
             renderSidebar();
         });
 
-    // DELEGATED COPY LOGIC: This ensures buttons work even after new results load
     document.addEventListener('click', function(e) {
         if (e.target && (e.target.classList.contains('copy-code-btn') || e.target.closest('.copy-code-btn'))) {
             const btn = e.target.classList.contains('copy-code-btn') ? e.target : e.target.closest('.copy-code-btn');
             const wrapper = btn.closest('.code-wrapper');
             const codeEl = wrapper.querySelector('code') || wrapper.querySelector('pre');
-            
             const textToCopy = codeEl.innerText.trim();
             
             navigator.clipboard.writeText(textToCopy).then(() => {
@@ -25,7 +23,7 @@ window.onload = function() {
                     btn.innerHTML = originalHTML;
                     btn.classList.remove('copied');
                 }, 2000);
-            }).catch(err => console.error('Clipbord Error:', err));
+            }).catch(err => console.error('Clipboard Error:', err));
         }
     });
 };
@@ -54,27 +52,25 @@ function search() {
 
     if(!q) return;
 
-    // --- LOADING STATE ---
     btnText.style.display = 'none';
     spinner.classList.remove('hidden');
     askBtn.disabled = true;
-    resDiv.innerHTML = "<div class='result-card'><div class='ai-content'>Searching...</div></div>";
+    
+    // FIXED: Uses 'loading-state' class for borderless loading text
+    resDiv.innerHTML = "<div class='result-card loading-state'><div class='ai-content'>Searching...</div></div>";
 
     fetch(`/search?q=${encodeURIComponent(q)}`)
         .then(res => res.json())
         .then(data => {
-            // --- RESET STATE ---
             btnText.style.display = 'inline';
             spinner.classList.add('hidden');
             askBtn.disabled = false;
-
             updateSidebar(data.query);
 
             let htmlContent = marked.parse(data.answer);
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = htmlContent;
 
-            // Wrap code blocks and inject buttons
             tempDiv.querySelectorAll('pre').forEach(pre => {
                 const wrapper = document.createElement('div');
                 wrapper.className = 'code-wrapper';
@@ -87,13 +83,14 @@ function search() {
                 wrapper.appendChild(copyBtn);
             });
 
+            // FIXED: Standard result-card (with border) for final content
             resDiv.innerHTML = `<div class="result-card"><div class="ai-content">${tempDiv.innerHTML}</div></div>`;
         })
         .catch(() => {
             btnText.style.display = 'inline';
             spinner.classList.add('hidden');
             askBtn.disabled = false;
-            resDiv.innerHTML = "<div class='result-card'>Connection Error.</div>";
+            resDiv.innerHTML = "<div class='result-card loading-state'><div class='ai-content'>Connection Error.</div></div>";
         });
 }
 
